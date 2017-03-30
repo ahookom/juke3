@@ -8,7 +8,8 @@ const initialState = {
   currentSongList: [],
   isPlaying: false,
   progress: 0,
-  playlists: []
+  playlists: [],
+  songs: []
 };
 
 export default initialState;

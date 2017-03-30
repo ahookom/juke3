@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import hashHistory from 'react-router'
+import {hashHistory} from 'react-router';
+
 import axios from 'axios';
 
 import initialState from '../initialState';
@@ -26,6 +27,7 @@ export default class AppContainer extends Component {
     this.selectArtist = this.selectArtist.bind(this);
     this.selectPlaylist = this.selectPlaylist.bind(this);
     this.addPlaylist = this.addPlaylist.bind(this);
+    this.updatePlaylist = this.updatePlaylist.bind(this);
   }
 
   componentDidMount() {
@@ -34,7 +36,8 @@ export default class AppContainer extends Component {
       .all([
         axios.get('/api/albums/'),
         axios.get('/api/artists/'),
-        axios.get('/api/playlists/')
+        axios.get('/api/playlists/'),
+        axios.get('api/songs')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
@@ -45,11 +48,12 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad(albums, artists, playlists) {
+  onLoad(albums, artists, playlists,songs) {
     this.setState({
       albums: convertAlbums(albums),
       artists: artists,
-      playlists: playlists
+      playlists: playlists,
+      songs: songs.map(convertSong)
     });
   }
 
@@ -130,13 +134,21 @@ export default class AppContainer extends Component {
       .then(res => res.map(r => r.data))
       .then(data => this.onLoadArtist(...data));
   }
+
   addPlaylist(playlistName) {
     return axios.post('/api/playlists', { name: playlistName })
       .then(res => res.data)
       .then(result => {
         this.setState({playlists: this.state.playlists.concat([result])})
-        hashHistory.push(`/playlists/${result.id}`)
+        hashHistory.push(`/playlist/${result.id}`)
       });
+  }
+
+  updatePlaylist(songId){
+    axios.post(`/api/${this.state.selectedPlaylist.id}/songs`, {id:songId})
+    .then((res)=>res.data)
+    .then(console.log)
+    .catch()
   }
 
   onLoadArtist(artist, albums, songs) {
@@ -163,7 +175,8 @@ export default class AppContainer extends Component {
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
       selectPlaylist: this.selectPlaylist,
-      addPlaylist: this.addPlaylist
+      addPlaylist: this.addPlaylist,
+      updatePlaylist: this.updatePlaylist
     });
 
     return (

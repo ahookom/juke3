@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, hashHistory, IndexRedirect, browserHistory } from 'react-router';
 import AppContainer from './containers/AppContainer';
 import Albums from './components/Albums';
 import Album from './components/Album';

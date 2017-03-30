@@ -15,7 +15,7 @@ return (
       </div>
       <div className="form-group">
         <div className="col-xs-10 col-xs-offset-2">
-          <button type="submit" disabled={!props.valid} className="btn btn-success">Create Playlist</button> <Warning warning={props.warning} />
+          <button type="submit" style={{float: 'left'}} disabled={!props.valid} className="btn btn-success">Create Playlist</button> <Warning warning={props.warning} />
 
         </div>
       </div>

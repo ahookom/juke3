@@ -4,6 +4,10 @@ import Songs from './Songs';
 class Playlist extends React.Component {
   constructor(props) {
     super(props)
+    this.state={
+      value: 2
+    }
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -15,6 +19,15 @@ class Playlist extends React.Component {
       this.props.selectPlaylist(nextProps.routeParams.playlistId)
   }
 
+  handleChange(e){
+    this.setState({value: e.target.value})
+  }
+
+  onSubmit(e){
+    e.preventDefault();
+    this.props.updatePlaylist(this.state.value)
+  }
+
   render() {
     const playlist = this.props.selectedPlaylist;
     return (
@@ -24,16 +37,16 @@ class Playlist extends React.Component {
         {playlist.songs && !playlist.songs.length && <small>No songs.</small>}
         <hr />
         <div className="well">
-          <form className="form-horizontal" noValidate name="songSelect">
+          <form onSubmit={this.onSubmit}className="form-horizontal" noValidate name="songSelect">
             <fieldset>
               <legend>Add to Playlist</legend>
               <div className="form-group">
                 <label htmlFor="song" className="col-xs-2 control-label">Song</label>
                 <div className="col-xs-10">
-                  <select className="form-control" name="song">
-
-
-                    <option value={'4'}>another song name</option>
+                  <select onChange={this.handleChange} value={this.state.value} className="form-control" name="song">
+                    {this.props.songs.map(song =>
+                      <option key={song.id} value={song.id}>{song.name}</option>
+                     )}
                   </select>
                 </div>
               </div>

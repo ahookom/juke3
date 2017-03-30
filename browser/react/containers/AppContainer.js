@@ -145,7 +145,8 @@ export default class AppContainer extends Component {
   }
 
   updatePlaylist(songId){
-    axios.post(`/api/${this.state.selectedPlaylist.id}/songs`, {id:songId})
+    this.state.selectedPlaylist.id &&
+    axios.post(`/api/playlists/${this.state.selectedPlaylist.id}/songs`, {id:songId})
     .then((res)=>res.data)
     .then(console.log)
     .catch()

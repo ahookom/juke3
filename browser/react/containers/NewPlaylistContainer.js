@@ -1,6 +1,7 @@
 import React from 'react';
 import NewPlaylist from '../components/NewPlaylist';
 import axios from 'axios'
+import hashHistory from 'react-router'
 
 export default class NewPlaylistContainer extends React.Component{
   constructor(props){
@@ -34,6 +35,7 @@ export default class NewPlaylistContainer extends React.Component{
     this.setState({
       playlistName: ''
     })
+
   }
 
   isValid(input){

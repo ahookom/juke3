@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import hashHistory from 'react-router'
 import axios from 'axios';
 
 import initialState from '../initialState';
@@ -23,6 +24,7 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
+    this.selectPlaylist = this.selectPlaylist.bind(this);
     this.addPlaylist = this.addPlaylist.bind(this);
   }
 
@@ -107,6 +109,17 @@ export default class AppContainer extends Component {
       }));
   }
 
+  selectPlaylist(playlistId) {
+    Promise
+      .all([
+        axios.get(`/api/playlists/${playlistId}`),
+        axios.get(`/api/playlists/${playlistId}/songs`)
+      ])
+      .then(res => res.map(r => r.data))
+      .then(data => this.onLoadPlaylist(...data));
+  }
+
+
   selectArtist(artistId) {
     Promise
       .all([
@@ -118,11 +131,11 @@ export default class AppContainer extends Component {
       .then(data => this.onLoadArtist(...data));
   }
   addPlaylist(playlistName) {
-    axios.post('/api/playlists', { name: playlistName })
+    return axios.post('/api/playlists', { name: playlistName })
       .then(res => res.data)
       .then(result => {
-        console.log([result]);
         this.setState({playlists: this.state.playlists.concat([result])})
+        hashHistory.push(`/playlists/${result.id}`)
       });
   }
 
@@ -135,6 +148,13 @@ export default class AppContainer extends Component {
     this.setState({ selectedArtist: artist });
   }
 
+  onLoadPlaylist(playlist, songs) {
+    songs = songs.map(convertSong);
+    playlist.songs = songs;
+
+    this.setState({ selectedPlaylist: playlist });
+  }
+
   render() {
 
     const props = Object.assign({}, this.state, {
@@ -142,6 +162,7 @@ export default class AppContainer extends Component {
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
+      selectPlaylist: this.selectPlaylist,
       addPlaylist: this.addPlaylist
     });
 

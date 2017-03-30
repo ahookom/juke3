@@ -29,11 +29,7 @@ export default class NewPlaylistContainer extends React.Component{
   onSubmit(e){
     e.preventDefault();
 
-    axios.post('/api/playlists', { name: this.state.playlistName })
-      .then(res => res.data)
-      .then(result => {
-        console.log(result) // response json from the server!
-      });
+    this.props.addPlaylist(this.state.playlistName);
 
     this.setState({
       playlistName: ''

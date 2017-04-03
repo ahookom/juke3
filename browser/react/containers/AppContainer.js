@@ -179,7 +179,7 @@ export default class AppContainer extends Component {
       addPlaylist: this.addPlaylist,
       updatePlaylist: this.updatePlaylist
     });
-
+    console.log(props);
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
